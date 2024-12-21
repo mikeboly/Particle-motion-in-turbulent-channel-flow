@@ -10,6 +10,16 @@ Lux = Laplace(x, y, z, ux);
 Luy = Laplace(x, y, z, uy);
 Luz = Laplace(x, y, z, uz);
 
+% 计算速度场的梯度
+[Dxux, Dyux, Dzux] = Gradient(x, y, z, ux);
+[Dxuy, Dyuy, Dzuy] = Gradient(x, y, z, uy);
+[Dxuz, Dyuz, Dzuz] = Gradient(x, y, z, uz);
+
+% 计算涡量分量 (omega_x, omega_y, omega_z)
+omega_x = Dzuy - Dyuz;  % ω_x = ∂u_y/∂z - ∂u_z/∂y
+omega_y = Dxuz - Dzux;  % ω_y = ∂u_z/∂x - ∂u_x/∂z
+omega_z = Dyux - Dxuy;  % ω_z = ∂u_x/∂y - ∂u_y/∂x
+
 method = "makima";  % 插值方法：makima插值
 
 % 速度场插值函数
@@ -29,3 +39,9 @@ func_Lux = griddedInterpolant({x, y, z}, Lux, method);
 func_Luy = griddedInterpolant({x, y, z}, Luy, method);
 func_Luz = griddedInterpolant({x, y, z}, Luz, method);
 func_Lu = @(X) [func_Lux(X), func_Luy(X), func_Luz(X)];
+
+% 涡量插值函数
+func_omega_x = griddedInterpolant({x, y, z}, omega_x, method);
+func_omega_y = griddedInterpolant({x, y, z}, omega_y, method);
+func_omega_z = griddedInterpolant({x, y, z}, omega_z, method);
+func_omega = @(X) [func_omega_x(X), func_omega_y(X), func_omega_z(X)];

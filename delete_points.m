@@ -1,4 +1,4 @@
-function [U, point, anl] = delete_points(U, point, anl)
+function [U, point] = delete_points(U, point)
     % x方向的周期性边界条件
     U(U(:,1) < 0, 1) = U(U(:,1) < 0, 1) + 2;  % 从x=0左边出界的粒子返回到x=2
     U(U(:,1) > 2, 1) = U(U(:,1) > 2, 1) - 2;  % 从x=2右边出界的粒子返回到x=0
