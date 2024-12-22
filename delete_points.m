@@ -11,14 +11,14 @@ function [U, point] = delete_points(U, point)
     % 粒子触碰 z=0 边界
     rebound_bottom = U(:,3) < 0;
     if any(rebound_bottom)
-        U(rebound_bottom, 3) = 0;              % 将z位置调整到z=0
+        U(rebound_bottom, 3) = - U(rebound_bottom,3);   % 将z位置调整到z=0
         U(rebound_bottom, 6) = -U(rebound_bottom, 6); % 反转vz速度
     end
 
     % 粒子触碰 z=1 边界
     rebound_top = U(:,3) > 1;
     if any(rebound_top)
-        U(rebound_top, 3) = 1;                 % 将z位置调整到z=1
+        U(rebound_top, 3) = 2 - U(rebound_top, 3); % 将z位置调整到z=1
         U(rebound_top, 6) = -U(rebound_top, 6); % 反转vz速度
     end
 end

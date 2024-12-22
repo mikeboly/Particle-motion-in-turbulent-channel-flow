@@ -16,9 +16,9 @@ Luz = Laplace(x, y, z, uz);
 [Dxuz, Dyuz, Dzuz] = Gradient(x, y, z, uz);
 
 % 计算涡量分量 (omega_x, omega_y, omega_z)
-omega_x = Dzuy - Dyuz;  % ω_x = ∂u_y/∂z - ∂u_z/∂y
-omega_y = Dxuz - Dzux;  % ω_y = ∂u_z/∂x - ∂u_x/∂z
-omega_z = Dyux - Dxuy;  % ω_z = ∂u_x/∂y - ∂u_y/∂x
+omega_x = Dyuz - Dzuy;  % ω_x = ∂u_y/∂z - ∂u_z/∂y
+omega_y = Dzux - Dxuz;  % ω_y = ∂u_z/∂x - ∂u_x/∂z
+omega_z = Dxuy - Dyux;  % ω_z = ∂u_x/∂y - ∂u_y/∂x
 
 method = "makima";  % 插值方法：makima插值
 
