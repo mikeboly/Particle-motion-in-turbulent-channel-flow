@@ -1,4 +1,4 @@
-beta = 2;
+beta = 2.99;
 tau = 0.01;
 
 filename1 = sprintf('./results/ensembleData_%g_%g.mat', beta, tau);
@@ -126,3 +126,35 @@ title(sprintf('Force Distribution (\\beta = %g, \\tau = %g)', beta, tau));
 legend('Pressure Gradient', 'Drag Force', 'Lift Force');
 
 saveas(gcf, sprintf('./figs/Force_Distribution_%g_%g.png', beta, tau));
+
+
+%% 绘制某个x-z界面的涡量场以及对应的时间平均后的粒子分布
+y_sec = 10;
+
+figure;
+imagesc(x, z, squeeze(omega_y(:,y_sec,:))');
+axis off;
+set(gca, 'Position', [0 0 1 1]); % Remove white borders
+saveas(gcf, sprintf('./figs/Vorticity_image_sec.png'));
+
+%%
+y_phy_sec = y_sec / 60;
+epsilon2 = 0.005;
+figure;
+% 粒子分布
+vorticity_image_sec = imread('./figs/vorticity_image_sec.png');
+h = imagesc(x, z, vorticity_image_sec);
+set(h, 'AlphaData', 1); % 设置透明度为0.5
+caxis([-1 1]); % 设置colorbar数据范围为-1到1
+colorbar; % 添加colorbar来表示涡量大小
+hold on;
+% 绘制xz平面图
+% 绘制y=y_sec处的粒子
+
+indices = find(particle_data(:,2) < y_phy_sec + epsilon2 & particle_data(:,2) > y_phy_sec - epsilon2);
+scatter(particle_data(indices, 1), particle_data(indices, 3), 3, 'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k', 'MarkerFaceAlpha', 0.25, 'MarkerEdgeAlpha', 0.25);
+xlabel('x/H');
+ylabel('z/H');
+title(sprintf('Particle Distribution in x-z Plane at y = %g (\\beta = %g, \\tau = %g)', y_phy_sec, beta, tau));
+hold off;
+saveas(gcf, sprintf('./figs/Particle_Distribution_xz_sec_%g.png',y_phy_sec));
