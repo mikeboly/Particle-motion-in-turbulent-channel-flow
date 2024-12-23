@@ -1,10 +1,13 @@
 readfile;
+
+%%
 % 绘制湍流场沿垂直于壁面的平均速度剖面
 
 uy_avg = mean(uy,[1,2]);
 plot(uy_avg(:), z, 'LineWidth', 2);
-xlabel('u_y');
+xlabel('u_{y,fluid}');
 ylabel('z');
+title('平均速度剖面');
 
 %%
 %  绘制不同湍流场速度分量RMS脉动的剖面
@@ -21,6 +24,7 @@ hold on
 plot(ux_rms(:), z, 'LineWidth', 2);
 plot(uz_rms(:), z, 'LineWidth', 2);
 legend('u_y','u_x','u_z');
+title('均方根速度脉动剖面');
 
 %%
 
@@ -77,22 +81,20 @@ ylabel('z/H');
 
 % 绘制xz平面的沿着y方向涡量场
 figure;
-y_sec = 10;
+y_sec = 60;
 imagesc(x, z, squeeze(omega_y(:,y_sec,:))');
-colorbar;
-xlabel('x');
-ylabel('z');
-title(['Vorticity field at y = ', num2str(y_sec)]);
+axis off;
+set(gca, 'Position', [0 0 1 1]); % Remove white borders
+saveas(gcf, sprintf('./figs/Vorticity_image.png'));
 
+%%
 %平均后的涡量场
 omega_y_avg = mean(omega_y,2);
 figure
 imagesc(x,z,squeeze(omega_y_avg)');
-colorbar;
-xlabel('x');
-ylabel('z');
-title('Mean Vorticity field');
-
+axis off;
+set(gca, 'Position', [0 0 1 1]); % Remove white borders
+saveas(gcf, sprintf('./figs/Vorticity_image.png'));
 
 %%
 % 绘制xy平面的涡量场
@@ -103,6 +105,36 @@ colorbar;
 xlabel('x');
 ylabel('y');
 title(['Vorticity field at z = ', num2str(z_sec)]);
+
+%h平均后的涡量场
+omega_z_avg = mean(omega_z,3);
+figure
+imagesc(x,y,squeeze(omega_z_avg)');
+colorbar;
+xlabel('x');
+ylabel('y');
+title('Mean Vorticity field in x-y plane');
+
+% 绘制yz平面的涡量场
+figure;
+x_sec = 10;
+imagesc(y, z, squeeze(omega_x(x_sec,:,:))');
+colorbar;
+xlabel('y');
+ylabel('z');
+title(['Vorticity field at x = ', num2str(x_sec)]);
+%平均后的涡量场
+omega_x_avg = mean(omega_x,1);
+figure
+imagesc(y,z,squeeze(omega_x_avg)');
+colorbar;
+xlabel('y');
+ylabel('z');
+title('Mean Vorticity field');
+
+
+
+
 
 %% 绘制yz平面密度分布图
 figure;

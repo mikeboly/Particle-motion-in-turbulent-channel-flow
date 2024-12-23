@@ -11,7 +11,7 @@ rho_c = 1;         % 流体密度
 
 % 无量纲参数
 beta = 2;  
-tau = 0.1;  % 弛豫时间tau(Stokes Number)
+tau = 0.01;  % 弛豫时间tau(Stokes Number)
 
 % lambda = 400;        % 参数lambda
 % D = 0.001;          % 几何尺寸相关参数
@@ -21,7 +21,7 @@ lambda = 3 / (2*beta) - 1/2;  % 参数lambda
 
 % 计算 Saffman 升力前的系数
 % 4 * beta / (pi * D^3 * rho_c)*(1.61 * D^2) .* sqrt(mu_c * rho_c)
-saffman_coeff = (4 * 1.61*beta*sqrt(1/Re)) / (pi*D);
+% saffman_coeff = (4 * 1.61*beta*sqrt(1/Re)) / (pi*D);
 % beta = 3 / (2*lambda + 1);  % 参数beta
 % tau = Re*D^2/12/beta;     % 弛豫时间tau(Stokes Number)
 % dt = min(dt, tau/2);    % 可选：限制时间步长
@@ -45,7 +45,7 @@ count = 0;         % 计数器
 ensembleData = [];  % 用于存储统计区间内的粒子数据
 pressure_gradient = []; % 存储压力梯度作用在每个粒子上的数据
 Drag_force = []; % 存储粒子受到的阻力数据
-Lift_force = []; % 存储粒子受到的升力数据
+% Lift_force = []; % 存储粒子受到的升力数据
 % Added_mass = []; % 存储粒子受到的附加质量力数据
 
 %%
@@ -58,25 +58,19 @@ while num > 0 && T <= 50  % 主循环：粒子存在且时间未到达最大值
     for s = 1 : steps
         rhs(:,1:3,s) = U(:,4:6);  % 速度项
 
-        % Saffman 升力项计算
-        omega = func_omega(U(:,1:3));  % 计算涡量
-        rel_vel = func_u(U(:,1:3)) - U(:,4:6);  % 相对速度 u - v
-        saffman_force = saffman_coeff * saffman_lift_force(rel_vel, omega, D, Re);  % Saffman 升力
+        % % Saffman 升力项计算
+        % omega = func_omega(U(:,1:3));  % 计算涡量
+        % rel_vel = func_u(U(:,1:3)) - U(:,4:6);  % 相对速度 u - v
+        % saffman_force = saffman_coeff * saffman_lift_force(rel_vel, omega, D, Re);  % Saffman 升力
 
         % Check for NaN values
         rhs(:,4:6,s) = beta*(-func_Dp(U(:,1:3)) + func_Lu(U(:,1:3))/Re) ...
-            + (func_u(U(:,1:3)) - U(:,4:6))/tau...
-            +saffman_force; % 粒子运动方程右侧项
+            + (func_u(U(:,1:3)) - U(:,4:6))/tau; % 粒子运动方程右侧项
 
         % Check for NaN values
         if any(isnan(rhs(:)))
             error('NaN detected in rhs');
         end
-
-
-        % rhs(:,4:6,s) = beta*(-func_Dp(U(:,1:3)) + func_Lu(U(:,1:3))/Re) ...
-        %     + (func_u(U(:,1:3)) - U(:,4:6))/tau...
-        %     +saffman_force; % 粒子运动方程右侧项
 
 
         U = U0;
@@ -96,7 +90,6 @@ while num > 0 && T <= 50  % 主循环：粒子存在且时间未到达最大值
         ensembleData = [ensembleData; U(:,1:6)];
         pressure_gradient = [pressure_gradient; beta*(-func_Dp(U(:,1:3)) + func_Lu(U(:,1:3))/Re)];
         Drag_force = [Drag_force; (func_u(U(:,1:3)) - U(:,4:6))/tau];
-        Lift_force = [Lift_force; saffman_force];
     end
 
     % 每10步更新一次可视化
@@ -107,9 +100,9 @@ while num > 0 && T <= 50  % 主循环：粒子存在且时间未到达最大值
 end
 
 % 保存数据
-save(['./results/ensembleData_', num2str(beta), '_', num2str(tau), '.mat'], 'ensembleData','-v7.3');
-save(['./results/pressure_gradient_', num2str(beta), '_', num2str(tau), '.mat'], 'pressure_gradient','-v7.3');
-save(['./results/Drag_force_', num2str(beta), '_', num2str(tau), '.mat'], 'Drag_force', '-v7.3');
-save(['./results/Lift_force_', num2str(beta), '_', num2str(tau), '.mat'], 'Lift_force', '-v7.3');
+save(['./results/nosaff_ensembleData_', num2str(beta), '_', num2str(tau), '.mat'], 'ensembleData','-v7.3');
+save(['./results/nosaff_pressure_gradient_', num2str(beta), '_', num2str(tau), '.mat'], 'pressure_gradient','-v7.3');
+save(['./results/nosaff_Drag_force_', num2str(beta), '_', num2str(tau), '.mat'], 'Drag_force', '-v7.3');
+
 
 

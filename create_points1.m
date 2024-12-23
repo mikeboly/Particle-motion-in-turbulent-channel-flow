@@ -3,10 +3,11 @@ num_x = 20;  % x方向粒子数
 num_y = 40;  % y方向粒子数
 num_z = 10;  % z方向粒子数
 
+eps1 = 1e-2;
 % 创建均匀分布的网格
 X = linspace(0, 2, num_x);
 Y = linspace(0, 4, num_y);
-Z = linspace(0, 1, num_z);
+Z = linspace(eps1, 1-eps1, num_z);
 [X, Y, Z] = meshgrid(X, Y, Z);
 
 % 转换为列向量

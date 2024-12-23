@@ -46,8 +46,7 @@ function lift_force = saffman_lift_force(rel_vel, omega, D, Re)
 
     % 计算最终的 Saffman 升力
     % 此处已剔除 saffman_coeff (在主程序中已定义)
-    lift_force = (const * D^2) .* sqrt(mu_c * rho_c) ...
-        .* (1./sqrt(omega_magnitude)) .* Cs .* cross_product;
+    lift_force = (1./sqrt(omega_magnitude)) .* Cs .* cross_product;
 
     % 输出升力的大小为 [num_particles, 3] 的矩阵
 end

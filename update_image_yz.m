@@ -31,5 +31,5 @@ end
 title(sprintf("T=%.3f", T), 'FontSize', 16);  % 设置标题字体大小
 drawnow;
 
-% 保存当前帧到GIF
+% % 保存当前帧到GIF
 % make_GIF(fig, "Animation", mode);
