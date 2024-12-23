@@ -1,5 +1,5 @@
-beta = 2;
-tau = 0.01;
+beta = 0.01;
+tau = 0.6;
 
 filename1 = sprintf('./results/nosaff_ensembleData_%g_%g.mat', beta, tau);
 filename2 = sprintf('./results/nosaff_pressure_gradient_%g_%g.mat', beta, tau);

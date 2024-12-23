@@ -158,3 +158,6 @@ ylabel('z/H');
 title(sprintf('Particle Distribution in x-z Plane at y = %g (\\beta = %g, \\tau = %g)', y_phy_sec, beta, tau));
 hold off;
 saveas(gcf, sprintf('./figs/Particle_Distribution_xz_sec_%g.png',y_phy_sec));
+
+
+%% 计算所有的Particle Reynold Number
