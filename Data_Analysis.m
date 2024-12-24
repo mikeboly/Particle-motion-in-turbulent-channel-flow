@@ -1,5 +1,5 @@
-beta = 2.99;
-tau = 0.01;
+% beta = 0.01;
+% tau = 0.1;
 
 filename1 = sprintf('./results/ensembleData_%g_%g.mat', beta, tau);
 filename2 = sprintf('./results/pressure_gradient_%g_%g.mat', beta, tau);
@@ -89,7 +89,7 @@ saveas(gcf, sprintf('./figs/Particle_Distribution_xz_%g_%g.png', beta, tau));
 % title(sprintf('Particle Distribution in x-y Plane (\\beta = %g, \\tau = %g)', beta, tau));
 % saveas(gcf, sprintf('./figs/Particle_Distribution_xy_%g_%g.png', beta, tau));
 
-%% 绘制不同Force关于z的分布图
+%% 绘制wall normal Force关于z的分布图
 
 dz = 0.01;
 z1 = 0:dz:1;
@@ -122,7 +122,7 @@ set(gcf, 'Position', [100, 100, 800, 600]); % 调整绘制窗口大小
 hold off
 xlabel('Force');
 ylabel('z/H');
-title(sprintf('Force Distribution (\\beta = %g, \\tau = %g)', beta, tau));
+title(sprintf('Force Distribution (\\beta = %g, \\tau = %g, Wall-Normal Components)', beta, tau));
 legend('Pressure Gradient', 'Drag Force', 'Lift Force');
 
 saveas(gcf, sprintf('./figs/Force_Distribution_%g_%g.png', beta, tau));
@@ -160,4 +160,40 @@ hold off;
 saveas(gcf, sprintf('./figs/Particle_Distribution_xz_sec_%g.png',y_phy_sec));
 
 
-%% 计算所有的Particle Reynold Number
+%% 绘制Streamwise Force关于z的分布图
+
+dz = 0.01;
+z1 = 0:dz:1;
+num = size(pressure_data, 1);
+% 计算压力梯度分布
+pressure_distri = zeros(length(z1), 1);
+for i = 1 : length(z1)
+    pressure_distri(i) = sum(pressure_data(:,2) .* (particle_data(:,3) >= z1(i) & particle_data(:,3) < z1(i) + dz)) / sum(particle_data(:,3) >= z1(i) & particle_data(:,3) < z1(i) + dz);
+end
+
+% 计算Drag force分布
+drag_distri = zeros(length(z1), 1);
+for i = 1 : length(z1)
+    drag_distri(i) = sum(drag_data(:,2) .* (particle_data(:,3) >= z1(i) & particle_data(:,3) < z1(i) + dz)) / sum(particle_data(:,3) >= z1(i) & particle_data(:,3) < z1(i) + dz);
+end
+
+% 计算Lift force分布
+lift_distri = zeros(length(z1), 1);
+for i = 1 : length(z1)
+    lift_distri(i) = sum(lift_data(:,2) .* (particle_data(:,3) >= z1(i) & particle_data(:,3) < z1(i) + dz)) / sum(particle_data(:,3) >= z1(i) & particle_data(:,3) < z1(i) + dz);
+end
+
+% 绘制分布图
+figure
+hold on
+plot(pressure_distri, z1, 'LineWidth', 2, 'LineStyle', '--');
+plot(drag_distri, z1, 'LineWidth', 2, 'LineStyle', '-.');
+plot(lift_distri, z1, 'LineWidth', 2, 'LineStyle', ':');
+set(gcf, 'Position', [100, 100, 800, 600]); % 调整绘制窗口大小
+hold off
+xlabel('Force');
+ylabel('z/H');
+title(sprintf('Force Distribution (\\beta = %g, \\tau = %g, Streamwise Components)', beta, tau));
+legend('Pressure Gradient', 'Drag Force', 'Lift Force');
+
+saveas(gcf, sprintf('./figs/y-Force_Distribution_%g_%g.png', beta, tau));

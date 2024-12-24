@@ -10,8 +10,8 @@ dt = 5e-3;         % 时间步长
 rho_c = 1;         % 流体密度
 
 % 无量纲参数
-beta = 2.99;  
-tau = 0.01;  % 弛豫时间tau(Stokes Number)
+% beta = 0.01;  
+% tau = 0.1;  % 弛豫时间tau(Stokes Number)
 
 % lambda = 400;        % 参数lambda
 % D = 0.001;          % 几何尺寸相关参数
